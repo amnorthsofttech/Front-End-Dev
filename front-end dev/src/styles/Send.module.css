@@ -1,0 +1,19 @@
+.container {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+}
+.row {
+  max-width: 448px;
+  width: 90vw;
+  height: auto;
+  padding: 20px;
+}
+.col {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  text-align: center;
+}
