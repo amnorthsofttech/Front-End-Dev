@@ -1,66 +1,65 @@
-import loginstyles from "../../styles/Login.module.css";
+import loginstyles from "../../styles/pages/Login.module.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
-// ==========================
-// User type and it's inputs
-// ==========================
-type User = {
-  email: string;
-  password: string;
-};
-
-// ==========================
-// Initial state for the user inputs
-// ==========================
-const initialUserInputs = { email: "", password: "" };
+import { existingUser, initialUserInputs } from "../types/forms/loginForm";
 
 function Login() {
   // ==========================
   // Managing state
-  // ==========================
-  const [userInput, setUserInputs] = useState<User>(initialUserInputs);
-  const [emailMessage, setEmailMessage] = useState("");
+  // ======================π====
+  const [userInput, setUserInput] = useState<existingUser>(initialUserInputs);
+  const [emailMsg, setEmailMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // ==========================
-  // Function to handle user inputs change, The e is of type Event.
+  // Function to show/not show password
+  // ==========================
+  const passwordVisibilityToggle = (): void => {
+    setShowPassword((show) => !show);
+  };
+
+  // ==========================
+  // Function to validate user email
+  // ==========================
+  const validateEmail = (email: string): void => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      setEmailMsg("Email is invalid");
+    } else {
+      setEmailMsg("");
+    }
+  };
+
+  // ==========================
+  // Function to handle user inputs
   // ==========================
   const handleUserInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const { name, value } = e.target;
-    setUserInputs((prev) => {
+    setUserInput((prev) => {
       return { ...prev, [name]: value };
     });
+    if (name === "email") validateEmail(value);
   };
-  // ==========================
-  // Validate the email just in case a user bypasses browser restrictions
-  // ==========================
-  const validateEmail = (email: string): boolean => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
+
   // ==========================
   // This function will handle the form submission
   // ==========================
   const handleSubmitForm = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (!validateEmail(userInput.email)) {
-      setEmailMessage("Email is invalid"); // Show error if email is invalid
-    } else {
-      setEmailMessage(""); // Clear error if email is valid
-    }
   };
   // ==========================
-  // Navigate the reset password page
+  // Navigate to the reset password page
   // ==========================
   const navigate = useNavigate();
+
   const ResetPasswordLink = (): void => {
     navigate("/Resetpassword");
   };
 
   // ==========================
-  // Navigate  the create account page
+  // Navigate to the create account page
   // ==========================
   const createAccountLink = (): void => {
     navigate("/Create");
@@ -68,23 +67,18 @@ function Login() {
 
   return (
     <>
-      {/* outer-container  */}
       <div className={`container ${loginstyles.container}`}>
-        {/* inner-container  */}
         <div className={`row ${loginstyles.row}`}>
           <div className={`col ${loginstyles.col}`}>
-            <div className={`box ${loginstyles.box}`}>
+            <div className="box">
               <form onSubmit={handleSubmitForm}>
                 <br />
                 <h3>Sign in to NorthSettle</h3>
                 <br />
-                <label className={` ${loginstyles.emaillabel}`} htmlFor="email">
-                  Email
-                </label>
+                <label>Email</label>
                 <br />
-
                 <input
-                  className={` form-control ${loginstyles.emailinput}`}
+                  className={` form-control ${loginstyles.userInput}`}
                   type="email"
                   name="email"
                   placeholder="abc@example.com"
@@ -93,20 +87,14 @@ function Login() {
                   autoComplete="off"
                   onChange={handleUserInputChange}
                 />
-                <p style={{ color: "red" }}>{emailMessage}</p>
+                {emailMsg.length > 0 && (
+                  <p style={{ color: "red", fontSize: "18px" }}>{emailMsg}</p>
+                )}{" "}
                 <br />
-                <br />
-                <label
-                  className={` ${loginstyles.passwordlabel}`}
-                  htmlFor="password"
-                >
-                  Password
-                </label>
-                <br />
-
+                <label>Password</label>
                 <input
-                  className={` form-control ${loginstyles.passwordinput}`}
-                  type="password"
+                  className={` form-control ${loginstyles.userInput}`}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Your password"
                   required
@@ -114,26 +102,30 @@ function Login() {
                   autoComplete="off"
                   onChange={handleUserInputChange}
                 />
+                <div className="form-check form-switch">
+                  Show password
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    onChange={passwordVisibilityToggle}
+                  />
+                </div>
                 <br />
-                <br />
-
-                <button
-                  type="submit"
-                  className={`btn btn-primary btn-lg ${loginstyles.siginbutton}`}
-                >
+                <button type="submit" className="btn btn-primary btn-lg">
                   Sign in
                 </button>
                 <br />
                 <br />
                 <p
                   onClick={ResetPasswordLink}
-                  className={`${loginstyles.forgotpassword}`}
+                  className={`${loginstyles.forgotPassword}`}
                 >
                   Forgot Password?
                 </p>
                 <p
                   onClick={createAccountLink}
-                  className={`${loginstyles.createaccount}`}
+                  className={`${loginstyles.createAccount}`}
                 >
                   Create Account
                 </p>

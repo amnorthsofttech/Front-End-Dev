@@ -1,4 +1,4 @@
-import paystyles from "../../styles/Pay.module.css";
+import paystyles from "../../styles/pages/Pay.module.css";
 
 
 function Paymentmethods() {

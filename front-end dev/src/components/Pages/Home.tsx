@@ -1,4 +1,4 @@
-import homestyles from "../../styles/Home.module.css";
+import homestyles from "../../styles/pages/Home.module.css";
 import { useNavigate } from "react-router-dom";
 function Home() {
 
